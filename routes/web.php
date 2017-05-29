@@ -141,7 +141,7 @@ Route::get('admin/panel', [
 
 Route::get('admin/panelExport', [
     'as' => 'panelExport',
-    'uses' => 'AdminController@getPanelExport'
+    'uses' => 'AdminController@getPanelExp'
 ]);
 
 // AJOUTER UN DOSSIER D'IMPORT
@@ -153,6 +153,14 @@ Route::post('admin/ajoutDossier', [
 Route::get('admin/ajoutDossier', [
     'as' => 'ajoutDossier',
     'uses' => 'AdminController@getAjoutDossier'
+]);
+Route::get('admin/exp/ajoutDossierExp', [
+    'as' => 'ajoutDossierExp',
+    'uses' => 'AdminController@getAjoutDossierExp'
+]);
+Route::post('admin/exp/ajoutDossierExp', [
+    'as' => 'ajoutDossierExp',
+    'uses' => 'AdminController@ajoutDossierExp'
 ]);
 
 
@@ -168,6 +176,16 @@ Route::post('admin/completerDossierImport', [
 ]);
 
 
+Route::get('admin/completerDossierExp/{slug}', [
+    'as' => 'getcompleterDossierExp',
+    'uses' => 'AdminController@getCompleterDossierExp'
+]);
+Route::post('admin/completerDossierExp', [
+    'as' => 'completerDossierExp',
+    'uses' => 'AdminController@postCompleteDossierExp'
+]);
+
+
 // FINALISER UN DOSSIER D'IMPORT
 
 Route::get('admin/finaliserDossierImport/{slug}', [
@@ -179,6 +197,19 @@ Route::post('admin/finaliserDossier', [
     'as' => 'finaliserDossier',
     'uses' => 'AdminController@finaliserDossier'
 ]);
+
+
+
+Route::get('admin/exp/finaliserDossierExp/{slug}', [
+    'as' => 'getFinaliserExp',
+    'uses' => 'AdminController@getFinaliserExp'
+]);
+
+Route::post('admin/exp/finaliserDossierExp', [
+    'as' => 'finaliserDossierExp',
+    'uses' => 'AdminController@finaliserDossierExp'
+]);
+
 
 // SUPPRIMER UN DOSSIER FINALISÉ
 Route::get('admin/supprimerFinal/{slug}', [
@@ -192,12 +223,29 @@ Route::get('admin/getsupprimerFinal', [
 ]);
 
 
+
+Route::get('admin/exp/supprimerFinalExp/{slug}', [
+    'as' => 'supprimerFinalExp',
+    'uses' => 'AdminController@supprimerFinalExp'
+]);
+
+Route::get('admin/exp/getsupprimerFinalExp', [
+    'as' => 'getsupprimerFinalExp',
+    'uses' => 'AdminController@getsupprimerFinalExp'
+]);
+
 // VOIR UN DOSSIER D'IMPORT
 
 Route::get('admin/voirUnImport/{slug}', [
     'as' => 'voirUnImport',
     'uses' => 'AdminController@voirUnImport'
 ]);
+
+Route::get('admin/exp/voirUnExp/{slug}', [
+    'as' => 'voirUnExp',
+    'uses' => 'AdminController@voirUnExp'
+]);
+
 
 
 // VOIR DOSSIER IMPORT OUVERT
@@ -207,11 +255,22 @@ Route::get('admin/voirDossierImport', [
     'uses' => 'AdminController@voirDossierImport'
 ]);
 
+
+Route::get('admin/exp/voirDossierExp', [
+    'as' => 'voirDossierExp',
+    'uses' => 'AdminController@voirDossierExp'
+]);
+
 // VOIR DOSSIER IMPORT ANNULER
 
 Route::get('admin/voirDossierAnnule', [
     'as' => 'voirDossierAnnule',
     'uses' => 'AdminController@voirDossierAnnule'
+]);
+
+Route::get('admin/voirDossierAnnuleExp', [
+    'as' => 'voirDossierAnnuleExp',
+    'uses' => 'AdminController@voirDossierAnnuleExp'
 ]);
 
 // ANNULER DOSSIER
@@ -220,6 +279,11 @@ Route::get('admin/voirDossierAnnule', [
 Route::match(['get','post'],'admin/annulerDossier/{slug}', [
     'as' => 'annulerDossier',
     'uses' => 'AdminController@annulerDossier'
+]);
+
+Route::match(['get','post'],'admin/annulerDossierExp/{slug}', [
+    'as' => 'annulerDossierExp',
+    'uses' => 'AdminController@annulerDossierExp'
 ]);
 
 
@@ -245,4 +309,14 @@ Route::get('admin/voirFinalDossier', [
 ]);
 
 
+Route::get('admin/exp/dossierFinalsExp', [
+    'as' => 'dossierFinalsExp',
+    'uses' => 'AdminController@dossierFinalExp'
+]);
+
+
+Route::get('admin/exp/voirFinalDossieExp', [
+    'as' => 'voirFinalDossierExp',
+    'uses' => 'AdminController@voirFinalDossierExp'
+]);
 

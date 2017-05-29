@@ -31,7 +31,7 @@
                 <div class="col-lg-3 col-md-4 col-xs-6 thumb">
                     <a class="thumbnail2" href="{{ route('voirReal', ['slug' => $realisations->slug]) }}">
                         <img src="{{ asset('images').'/'.$realisations->imageName }}">
-                    </a>&nbsp;<p>{{ $realisations->description }}</p>
+                    </a>&nbsp;<p>{{ $realisations->title }}</p>
                 </div>
 
             @endforeach

@@ -13,7 +13,7 @@
                     <i class="fa fa-home"></i>  <a href="<?php echo e(route('adminhome')); ?>">Home</a>
                 </li>
                 <li class="active">
-                    <i class="fa fa-edit"></i> ajouter
+                    <i class="fa fa-edit"></i> finaliser
                 </li>
             </ol>
         </div>

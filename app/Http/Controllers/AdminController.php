@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dossier;
+use App\Export;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Input;
@@ -55,10 +56,25 @@ class AdminController extends Controller
             ->colors(['#f1c40f','#1abc9c','#3498db','#e67e22','#9b59b6']);
 
 
+        $chart4 = Charts::database(Export::all(),'bar', 'highcharts')
+            ->title('Nombres de dossiers par état' )
 
+            ->elementlabel("Totals des dossiers")
+            ->dimensions(1000,500)
+            ->responsive(true)
+            ->groupBy('case',null, [0 => 'Ouverts', 1 => 'Déclarés', 2 => 'Complets', 3 => 'Annulés'])
+            ->colors(['#f1c40f','#1abc9c','#3498db','#e67e22','#9b59b6']);
 
+        $chart5 = Charts::database(Export::all(),'line', 'highcharts')
+            ->title('Nombres de dossiers par Mois')
 
-        return view('admin.stats',['chart' => $chart,'chart2' => $chart2,'chart3' => $chart3]);
+            ->elementlabel("Totals des dossiers")
+            ->dimensions(1000,500)
+            ->responsive(true)
+            ->groupByMonth()
+            ->colors(['#f1c40f','#1abc9c','#3498db','#e67e22','#9b59b6']);
+
+        return view('admin.stats',['chart' => $chart,'chart5' => $chart5,'chart2' => $chart2,'chart3' => $chart3,'chart4' => $chart4]);
     }
 
 
@@ -71,6 +87,13 @@ class AdminController extends Controller
 
         return view('admin.ajoutDossier');
     }
+
+    public function getAjoutDossierExp()
+    {
+
+        return view('admin.exp.ajoutDossierExp');
+    }
+
 
 
 
@@ -122,6 +145,57 @@ class AdminController extends Controller
     }
 
 
+    public function ajoutDossierExp(Request $request)
+    {
+        $parameters = $request->except(['_token']);
+        $date = new \DateTime(null);
+        $this->validate($request,[
+            'repertoire' => 'required',
+            'nomDest' => 'required',
+            'prenomDest' => 'required',
+
+            'nature' => 'required',
+            'adresse' => 'required',
+            'volume' => 'required',
+            'nbrColis' => 'required',
+            'poids' => 'required',
+            'depositaire' => 'required',
+
+            'factureFour' => 'required'
+        ]);
+        $export = new Export([
+            'repertoire' => $request->input('repertoire'),
+            'nomDest' => $request->input('nomDest'),
+            'prenomDest' => $request->input('prenomDest'),
+
+            'volume' => $request->input('volume'),
+            'adresse' => $request->input('adresse'),
+            'nature' => $request->input('nature'),
+            'nbrColis' => $request->input('nbrColis'),
+            'poids' => $request->input('poids'),
+            'depositaire' => $request->input('depositaire'),
+
+
+
+
+
+
+
+        ]);
+
+        if (Input::hasFile('factureFour')) {
+            $file1=Input::file('factureFour');
+
+            $file1->move(public_path().'/doc',$file1->getClientOriginalName());
+            $export->factureFour = $file1->getClientOriginalName();
+        }
+        $export->slug = Str::slug($parameters['repertoire'] . $date->format('dmYhis'));
+
+        $export->save();
+
+        return redirect()->route('adminhome')->with("success", "Vous venez d'ajouter un Dossier d'exportation");
+    }
+
 
 
     // Voir la liste des dossier à finaliser
@@ -138,6 +212,17 @@ class AdminController extends Controller
     }
 
 
+    public function voirFinalDossierExp()
+    {
+        $export = Export::getDossierFinalExp();
+
+        return view::make('admin.exp.voirFinalDossierExp',[
+            'export' => Export::getDossierFinalExp()
+        ]);
+
+    }
+
+
     // ALLER A LA PAGE DE FINALISATION
 
     public function getFinaliserImport($slug)
@@ -146,6 +231,14 @@ class AdminController extends Controller
         $dossier= Dossier::where('slug', '=', $slug)->first();
 
         return view('admin.finaliserDossierImport')->with('dossier', $dossier);
+    }
+
+    public function getFinaliserExp($slug)
+    {
+
+        $export = Export::where('slug', '=', $slug)->first();
+
+        return view('admin.exp.finaliserDossierExp')->with('export', $export);
     }
 
 
@@ -160,6 +253,15 @@ class AdminController extends Controller
         ]);
     }
 
+    public function getsupprimerFinalExp()
+    {
+        $export = Export::allDossierExp();
+
+        return view::make('admin.exp.supprimerFinalExp',[
+            'export' => Export::allDossierExp()
+        ]);
+    }
+
     //SUPPRIMER UN DOSSIER
 
     public function supprimerFinal($slug)
@@ -169,6 +271,15 @@ class AdminController extends Controller
 
         return redirect()->route('dossierFinals')->with('success', 'Dossier supprimer avec succés.');
     }
+
+    public function supprimerFinalExp($slug)
+    {
+        $export= Export::where('slug', '=', $slug)->first();
+        $export->delete();
+
+        return redirect()->route('dossierFinalsExp')->with('success', 'Dossier supprimer avec succés.');
+    }
+
 
 
 
@@ -304,6 +415,140 @@ class AdminController extends Controller
     }
 
 
+
+
+
+
+
+
+
+    public function finaliserDossierExp(Request $request)
+    {
+
+
+        if ($request->isMethod('post')) {
+            $parameters = $request->except(['_token']);
+            $export = Export::where('slug', '=', $parameters['slug'])->first();
+            $export->orbus = $parameters['orbus'];
+            $export->libelle = $parameters['libelle'];
+            $export->reçu = $parameters['reçu'];
+            $export->date = $parameters['date'];
+            $export->datebea = $parameters['datebea'];
+            $export->cheque = $parameters['cheque'];
+            $export->acompte = $parameters['acompte'];
+            $export->reliquat = $parameters['reliquat'];
+            $export->case = '2';
+
+
+
+            if (Input::hasFile('copieBl')) {
+                $file1=Input::file('copieBl');
+
+                $file1->move(public_path().'/doc',$file1->getClientOriginalName());
+                $export->copieBl = $file1->getClientOriginalName();
+            }
+
+
+
+
+            if (Input::hasFile('quitance')) {
+                $file2=Input::file('quitance');
+
+                $file2->move(public_path().'/doc',$file2->getClientOriginalName());
+                $export->quitance = $file2->getClientOriginalName();
+
+            }
+
+
+
+            if (Input::hasFile('copieBon')) {
+                $file3=Input::file('copieBon');
+
+                $file3->move(public_path().'/doc',$file3->getClientOriginalName());
+                $export->copieBon = $file3->getClientOriginalName();
+
+            }
+
+
+
+            if (Input::hasFile('copieCheque')) {
+                $file4=Input::file('copieCheque');
+
+                $file4->move(public_path().'/doc',$file4->getClientOriginalName());
+                $export->copieCheque = $file4->getClientOriginalName();
+
+            }
+
+
+
+
+            if (Input::hasFile('copieDeclaration')) {
+                $file5=Input::file('copieDeclaration');
+
+                $file5->move(public_path().'/doc',$file5->getClientOriginalName());
+                $export->copieDeclaration = $file5->getClientOriginalName();
+
+            }
+
+
+            if (Input::hasFile('copieFacture')) {
+                $file6=Input::file('copieFacture');
+
+                $file6->move(public_path().'/doc',$file6->getClientOriginalName());
+                $export->copieFacture = $file6->getClientOriginalName();
+
+            }
+
+
+            if (Input::hasFile('copieListe')) {
+                $file7=Input::file('copieListe');
+
+                $file7->move(public_path().'/doc',$file7->getClientOriginalName());
+                $export->copieListe = $file7->getClientOriginalName();
+
+            }
+
+
+
+            if (Input::hasFile('copieNote')) {
+                $file8=Input::file('copieNote');
+
+                $file8->move(public_path().'/doc',$file8->getClientOriginalName());
+                $export->copieNote = $file8->getClientOriginalName();
+
+            }
+
+
+
+            if (Input::hasFile('copieCarte')) {
+                $file9=Input::file('copieCarte');
+
+                $file9->move(public_path().'/doc',$file9->getClientOriginalName());
+                $export->copieCarte = $file9->getClientOriginalName();
+
+            }
+
+
+
+
+            if (Input::hasFile('copieCMC')) {
+                $file=Input::file('copieCMC');
+
+                $file->move(public_path().'/doc',$file->getClientOriginalName());
+                $export->copieCMC = $file->getClientOriginalName();
+
+            }
+
+
+
+            $export->save();
+
+            return redirect()->route('adminhome')->with('success', 'Dossier Finaliser.');
+
+        }
+
+        return view('adminhome')->with('export', $export);
+    }
     // VOIR TOUS LES DOSSIERS FINALISÉS
 
     public function dossierFinal()
@@ -312,6 +557,15 @@ class AdminController extends Controller
 
         return view::make('admin.dossierFinals',[
             'dossier' => Dossier::dossierFinal()
+        ]);
+    }
+
+    public function dossierFinalExp()
+    {
+        $export = Export::dossierFinalExp();
+
+        return view::make('admin.exp.dossierFinalsExp',[
+            'export' => Export::dossierFinalExp()
         ]);
     }
 
@@ -328,6 +582,15 @@ class AdminController extends Controller
             'dossier' => Dossier::getDossierAnnule()
         ]);
     }
+    public function voirDossierAnnuleExp()
+    {
+        $export = Export::getDossierAnnuleExp();
+
+        return view::make('admin.exp.voirDossierAnnuleExp',[
+            'export' => Export::getDossierAnnuleExp()
+        ]);
+    }
+
 
 
     //VOIR TOUS LES DOSSIER A COMPLETER
@@ -341,6 +604,15 @@ class AdminController extends Controller
       ]);
     }
 
+    public function voirDossierExp()
+    {
+        $export = Export::getDossierExp();
+
+        return view::make('admin.exp.voirDossierExp',[
+            'export' => Export::getDossierExp()
+        ]);
+    }
+
 
     // VOIR UN DOSSIER D'IMPORTATION
 
@@ -352,6 +624,15 @@ class AdminController extends Controller
         return view('admin.voirUnImport')->with('dossier', $dossier);
 
     }
+    public function voirUnExp($slug)
+    {
+
+        $export= Export::where('slug', '=', $slug)->first();
+
+        return view('admin.exp.voirUnExp')->with('export', $export);
+
+    }
+
 
 
 
@@ -365,6 +646,15 @@ class AdminController extends Controller
 
         return view('admin.completerDossierImport')->with('dossier', $dossier);
     }
+
+    public function getCompleterDossierExp($slug)
+    {
+
+        $export= Export::where('slug', '=', $slug)->first();
+
+        return view('admin.exp.completerDossierExp')->with('export', $export);
+    }
+
 
 
     // COMPLETER UN DOSSIER OUVERTS
@@ -396,6 +686,40 @@ class AdminController extends Controller
         return view('completerDossierImport')->with('dossier', $dossier);
     }
 
+
+    public function postCompleteDossierExp(Request $request)
+    {
+
+
+        if ($request->isMethod('post')) {
+            $parameters = $request->except(['_token']);
+            $export= Export::where('slug', '=', $parameters['slug'])->first();
+            $export->orbus = $parameters['orbus'];
+            $export->declaration = $parameters['declaration'];
+            $export->droit = $parameters['droit'];
+            $export->dateDeclaration = $parameters['dateDeclaration'];
+            $export->douane = $parameters['douane'];
+            $export->bureau = $parameters['bureau'];
+            $export->case = '1';
+
+
+            if (Input::hasFile('copieCo')) {
+                $file1=Input::file('copieCo');
+
+                $file1->move(public_path().'/doc',$file1->getClientOriginalName());
+                $export->copieCo = $file1->getClientOriginalName();
+            }
+
+            $export->save();
+
+            return redirect()->route('adminhome')->with('success', 'Dossier Compléter.');
+
+        }
+
+        return view('completerDossierExp')->with('export', $export);
+    }
+
+
     // ANNULER DOSSIER
 
 
@@ -418,6 +742,22 @@ class AdminController extends Controller
     }
 
 
+    public function annulerDossierExp($slug)
+    {
+
+
+
+        $export= Export::where('slug', '=', $slug)->first();
+        $export->case = '3';
+
+
+        $export->save();
+
+        return redirect()->route('adminhome')->with('success', 'Dossier Annulé.');
+
+
+
+    }
 
 
 
@@ -520,6 +860,15 @@ class AdminController extends Controller
         $dossier = Dossier::allDossier();
         return view::make('admin.panel',[
             'dossier' => Dossier::allDossier()
+        ]);
+    }
+
+    public function getPanelExp()
+    {
+
+        $export = Export::allDossierExp();
+        return view::make('admin.panelExport',[
+            'export' => Export::allDossierExp()
         ]);
     }
 

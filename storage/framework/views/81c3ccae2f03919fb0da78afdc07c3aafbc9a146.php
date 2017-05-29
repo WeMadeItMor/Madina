@@ -16,7 +16,7 @@
                 <div class="col-lg-3 col-md-4 col-xs-6 thumb">
                     <a class="thumbnail2" href="<?php echo e(route('voirReal', ['slug' => $realisations->slug])); ?>">
                         <img src="<?php echo e(asset('images').'/'.$realisations->imageName); ?>">
-                    </a>&nbsp;<p><?php echo e($realisations->description); ?></p>
+                    </a>&nbsp;<p><?php echo e($realisations->title); ?></p>
                 </div>
 
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

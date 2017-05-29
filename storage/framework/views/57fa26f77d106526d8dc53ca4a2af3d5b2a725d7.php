@@ -93,20 +93,31 @@
                            fa-toggle-down"></i></a>
                         <ul class="sidebar-second-level collapse" id="collapseMulti2">
                             <li>
-                                <a href="#"> <i class="fa fa-fw fa-plus"></i>  Ajouter un Dossier</a>
+                                <a href="<?php echo e(route('ajoutDossierExp')); ?>"> <i class="fa fa-fw fa-plus"></i>  Ajouter un
+                                    Dossier</a>
                             </li>
                             <li>
-                                <a href="#"> <i class="fa fa-fw fa-plus-circle"></i>
+                                <a href="<?php echo e(route('voirDossierExp')); ?>"> <i class="fa fa-fw fa-plus-circle"></i>
                                     Compléter un Dossier</a>
                             </li>
                             <li>
-                                <a href="#">  <i class="fa fa-fw fa-check"></i>  Finaliser un Dossier</a>
+                                <a href="<?php echo e(route('voirFinalDossierExp')); ?>">  <i class="fa fa-fw fa-check"></i>
+                                    Finaliser un
+                                    Dossier</a>
                             </li>
                             <li>
-                                <a href="#"> <i class="fa fa-fw fa-search-minus"></i>  Rechercher</a>
+                                <a href="<?php echo e(route('dossierFinalsExp')); ?>"> <i class="fa fa-fw fa-search-minus"></i>
+                                    Rechercher</a>
                             </li>
                             <li>
-                                <a href="#"> <i class="fa fa-fw fa-remove"></i>  Supprimer</a>
+                                <a href="<?php echo e(route('getsupprimerFinalExp')); ?>"> <i class="fa fa-fw fa-remove"></i>
+                                    Supprimer</a>
+                            </li>
+                            <li>
+                                <a href="<?php echo e(route('voirDossierAnnuleExp')); ?>"><i class="fa fa-fw fa-recycle"></i>
+                                    Dossier
+                                    Annulés
+                                </a>
                             </li>
                         </ul>
                     </li>

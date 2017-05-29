@@ -93,20 +93,31 @@
                            fa-toggle-down"></i></a>
                         <ul class="sidebar-second-level collapse" id="collapseMulti2">
                             <li>
-                                <a href="#"> <i class="fa fa-fw fa-plus"></i>  Ajouter un Dossier</a>
+                                <a href="{{ route('ajoutDossierExp') }}"> <i class="fa fa-fw fa-plus"></i>  Ajouter un
+                                    Dossier</a>
                             </li>
                             <li>
-                                <a href="#"> <i class="fa fa-fw fa-plus-circle"></i>
+                                <a href="{{ route('voirDossierExp') }}"> <i class="fa fa-fw fa-plus-circle"></i>
                                     Compléter un Dossier</a>
                             </li>
                             <li>
-                                <a href="#">  <i class="fa fa-fw fa-check"></i>  Finaliser un Dossier</a>
+                                <a href="{{ route('voirFinalDossierExp') }}">  <i class="fa fa-fw fa-check"></i>
+                                    Finaliser un
+                                    Dossier</a>
                             </li>
                             <li>
-                                <a href="#"> <i class="fa fa-fw fa-search-minus"></i>  Rechercher</a>
+                                <a href="{{ route('dossierFinalsExp') }}"> <i class="fa fa-fw fa-search-minus"></i>
+                                    Rechercher</a>
                             </li>
                             <li>
-                                <a href="#"> <i class="fa fa-fw fa-remove"></i>  Supprimer</a>
+                                <a href="{{ route('getsupprimerFinalExp') }}"> <i class="fa fa-fw fa-remove"></i>
+                                    Supprimer</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('voirDossierAnnuleExp') }}"><i class="fa fa-fw fa-recycle"></i>
+                                    Dossier
+                                    Annulés
+                                </a>
                             </li>
                         </ul>
                     </li>

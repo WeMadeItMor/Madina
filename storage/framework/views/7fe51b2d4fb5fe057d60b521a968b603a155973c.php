@@ -59,8 +59,24 @@
     </div><hr/>
     <div class="row">
         <h1>Statistique sur l'exportation</h1> <hr/>
-       
+       <div class="col-lg-6 ">
 
+
+
+            <?php echo $chart4->render(); ?>
+
+
+
+        </div>
+          <div class="col-lg-6 ">
+
+
+
+              <?php echo $chart5->render(); ?>
+
+
+
+          </div>
     </div>
 
     <!-- /.row -->

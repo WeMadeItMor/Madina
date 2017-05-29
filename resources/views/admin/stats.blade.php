@@ -59,23 +59,22 @@
     </div><hr/>
     <div class="row">
         <h1>Statistique sur l'exportation</h1> <hr/>
-       {{-- <div class="col-lg-6 ">
+       <div class="col-lg-6 ">
 
 
 
-            {!! $chart->render() !!}
+            {!! $chart4->render() !!}
 
 
         </div>
-        <div class="col-lg-6 ">
+          <div class="col-lg-6 ">
 
 
 
-            {!! $chart2->render() !!}
+              {!! $chart5->render() !!}
 
 
-        </div>--}}
-
+          </div>
     </div>
 
     <!-- /.row -->
